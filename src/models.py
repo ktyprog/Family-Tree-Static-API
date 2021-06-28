@@ -18,75 +18,86 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class GrandParents(db.Model):
-    __tablename__ = 'grandparents'
+class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
-    last_name = db.Column(db.String(80), unique=False, nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    # parents_id = db.Column(db.Integer, db.ForeignKey('Parents_Relation.id'))
-    childrens = db.relationship('Parents_Relation', backref='grandparents', lazy=True)
-    
+    name = db.Column(db.String(120))
+    last_name = db.Column(db.String(80))
+    age = db.Column(db.Integer)
+    parent_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    parent = db.relationship('Person')
 
-    
+
+    def __repr__(self):
+        return '<Person %s' % self.name
+
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            "last_name": self.last_name,
+            "last name": self.last_name,
             "age": self.age,
-            "childrens": list(map(lambda x: x.serialize(), self.childrens))
+            "parent_id": self.parent_id,
             # do not serialize the password, its a security breach
         }
 
-class Parents_Relation(db.Model):
+# class Abuelo(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     nombre = db.Column(db.String(120))
+#     apellido = db.Column(db.String(80))
+#     edad = db.Column(db.Integer)
 
-    __tablename__ = 'parents_relation'
-    id = db.Column(db.Integer, primary_key=True)
-    parents_id = db.Column(db.Integer, db.ForeignKey('parents.id'))
-    grand_parents_id = db.Column(db.Integer, db.ForeignKey('grandparents.id'))
-    current_generation_id = db.Column(db.Integer, db.ForeignKey('current_generation.id'))
-
-
-class Parents(db.Model):
-    __tablename__ = 'parents'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
-    last_name = db.Column(db.String(80), unique=False, nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    grand_parents = db.relationship('Parents_Relation', backref='parents', lazy=True)
-    # current_generation = db.relationship('Parents_Relation', backref='parents', lazy=True)
-    
-
-    
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "last_name": self.last_name,
-            "age": self.age,
-            "grand_parents": list(map(lambda x: x.serialize(), self.grand_parents))
-            # do not serialize the password, its a security breach
-        }
-
-
-
-
-class Current_Generation(db.Model):
-    __tablename__ = 'current_generation'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
-    last_name = db.Column(db.String(80), unique=False, nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    parents = db.relationship('Parents_Relation', backref='current_generation', lazy=True)
+#     def __repr__(self):
+#         return '<Abuelo %r>' % self.id
+        
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "nombre": self.nombre,
+#             "apellido": self.apellido,
+#             "edad": self.edad,
+            
+#             # do not serialize the password, its a security breach
+#         }
 
     
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "last_name": self.last_name,
-            "age": self.age,
-            "parents": list(map(lambda x: x.serialize(), self.parents))
-            # do not serialize the password, its a security breach
-        }
+# class Padre(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     nombre = db.Column(db.String(120))
+#     apellido = db.Column(db.String(80))
+#     edad = db.Column(db.Integer)
+#     abuelo_id = db.Column(db.Integer, db.ForeignKey('abuelo.id'))
+#     abuelo = db.relationship('Abuelo')
+
+
+#     def __repr__(self):
+#         return '<Padre %r>' % self.id
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "nombre": self.nombre,
+#             "apellido": self.apellido,
+#             "edad": self.edad,
+#             "abuelo_id": self.abuelo_id,
+#             # do not serialize the password, its a security breach
+#         }
+
+# class Generacion_actual(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     nombre = db.Column(db.String(120), unique=False, nullable=False)
+#     apellido = db.Column(db.String(80), unique=False, nullable=False)
+#     edad = db.Column(db.Integer)
+#     padre_id = db.Column(db.Integer, db.ForeignKey('padre.id'))
+#     padre = db.relationship('Padre')
+#     def __repr__(self):
+#         return '<Generacion_actual %r>' % self.nombre
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "nombre": self.nombre,
+#             "apellido": self.apellido,
+#             "edad": self.edad,
+#             "padre_id": self.padre_id
+#             # do not serialize the password, its a security breach
+#         }
